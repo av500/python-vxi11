@@ -1,6 +1,7 @@
 import vxi11
 import time
 import sys
+import math
 
 cnt = 0
 pen = 0
@@ -21,6 +22,56 @@ def send_line(line):
 	print("SEND {} : {}".format(cnt, line))
 	cnt += 1
 	instr.write(line + '\r\n')
+
+def handle_CI(line):
+	global xpos, ypos
+
+	print("handle_CI")
+	if len(line) == 0 :
+		return
+	nums = line.split(",")
+	nlen = len(nums)
+	res = 0;
+	if nlen > 2:
+		return
+	elif nlen == 2 :
+		if ";" in nums[1] :
+			nums[1] = nums[1][:-1]
+		res = int(nums[1])
+
+	if ";" in nums[0] :
+		nums[0] = nums[0][:-1]
+
+	radius = int(nums[0])
+	circum = 2.0 * math.pi * radius
+	arclen = 10 * 40
+	arcs = 60  #int(circum / arclen)
+	old_pen = pen;
+	print("r %d, res %d  cir %f  arcs %d" % (radius, res, circum, arcs))
+	for i in range(arcs) :
+		x = math.sin(i * 2.0 * math.pi / arcs) * radius
+ 		y = math.cos(i * 2.0 * math.pi / arcs) * radius
+		print("i %d, x %f  y %f" % (i, x, y))
+		if(i == 0) :
+			send_line("PU;")
+			# move to start point
+			send_line("PA" + str(int(xpos + x)) + "," + str(int(ypos + y)) + ";")
+			send_line("PD;")
+		else :
+			# move to next point
+			send_line("PA" + str(int(xpos + x)) + "," + str(int(ypos + y)) + ";")
+
+	# close the arc
+	x = math.sin(0) * radius
+	y = math.cos(0) * radius
+	print("x %f  y %f" % (x, y))
+	send_line("PA" + str(int(xpos + x)) + "," + str(int(ypos + y)) + ";")
+
+	# move back to xpos, ypos
+	send_line("PU;")
+	send_line("PA" + str(int(xpos)) + "," + str(int(ypos)) + ";")
+	if( old_pen == 1 ) :	
+		send_line("PD;")
 
 def handle_PA(prefix, line):
 	global xpos, ypos
@@ -96,6 +147,9 @@ with open(filepath) as fp:
 			elif line.find("PA") == 0:
 					# break long PA lines
 					handle_PA("", line[2:])
+			elif line.find("CI") == 0:
+					# handle circle
+					handle_CI(line[2:])
 			else :
 				send_line(line)
 
