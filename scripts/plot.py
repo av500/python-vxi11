@@ -13,7 +13,7 @@ def send_line(line):
 	instr.write(line + '\r\n')
 
 def handle_PA(prefix, line):
-	print(prefix)
+	global xpos, ypos
 	send_line(prefix)
 
 	if len(line) == 0 :
@@ -21,7 +21,7 @@ def handle_PA(prefix, line):
 	nums = line.split(",")
 	nlen = len(nums)
 	max_len = 16;
-	if nlen > max_len:
+	if nlen > 0:
 		pos = 0;
 		while nlen > 0:
 			line = "PA";
@@ -29,6 +29,7 @@ def handle_PA(prefix, line):
 			for x in range(loop) :
 				#print(nums[pos])
 				line = line + nums[pos]
+
 				if x < loop - 1 :
 					line = line + ","
 				elif ";" not in nums[pos] :
@@ -36,8 +37,8 @@ def handle_PA(prefix, line):
 				pos += 1				
 			nlen -= max_len
 			send_line(line)
-	else :
-		send_line("PA" + line)
+
+
 
 instr = vxi11.Instrument("192.168.1.134", "gpib0,5", term_char = '\r')
 print("plotter:  " + instr.ask("OI;"))
@@ -74,6 +75,9 @@ with open(filepath) as fp:
 					handle_PA("PD;", line[2:])
 				else :
 					send_line(line)
+			elif line.find("PA") == 0:
+					# break long PA lines
+					handle_PA("", line[2:])
 			else :
 				send_line(line)
 
