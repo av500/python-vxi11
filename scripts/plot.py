@@ -3,11 +3,21 @@ import time
 import sys
 
 cnt = 0
+pen = 0
+xpos = 0
+ypos = 0
 
 def send_line(line):
 	global cnt
+	global pen
 	if len(line) == 0 :
 		return
+
+	if line.find("PU") == 0:
+		pen = 0;
+	elif line.find("PD") == 0:
+		pen = 1;
+	
 	print("SEND {} : {}".format(cnt, line))
 	cnt += 1
 	instr.write(line + '\r\n')
@@ -28,7 +38,15 @@ def handle_PA(prefix, line):
 			loop = min(max_len, nlen)
 			for x in range(loop) :
 				#print(nums[pos])
+				if ";" in nums[pos] :
+					nums[pos] = nums[pos][:-1]
 				line = line + nums[pos]
+				coord = int(nums[pos])
+				if (pos % 2) == 0 :
+					xpos = coord
+				else :
+					ypos = coord
+					print("x %d  y %d  pen %d" % (xpos, ypos, pen))
 
 				if x < loop - 1 :
 					line = line + ","
