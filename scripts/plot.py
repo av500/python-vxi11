@@ -50,8 +50,8 @@ def handle_CI(line):
 	incr = angle * 2.0 * math.pi / 360
 	print("r %d, a %d  arcs %d  incr %f" % (radius, angle, arcs, incr))
 	for i in range(arcs) :
-		x = math.sin(i * 2.0 * math.pi / arcs) * radius
- 		y = math.cos(i * 2.0 * math.pi / arcs) * radius
+ 		x = math.cos(i * incr) * radius
+		y = math.sin(i * incr) * radius
 		print("i %d, x %f  y %f" % (i, x, y))
 		if(i == 0) :
 			send_line("PU;")
@@ -63,10 +63,7 @@ def handle_CI(line):
 			send_line("PA" + str(int(xpos + x)) + "," + str(int(ypos + y)) + ";")
 
 	# close the arc
-	x = math.sin(0) * radius
-	y = math.cos(0) * radius
-	print("x %f  y %f" % (x, y))
-	send_line("PA" + str(int(xpos + x)) + "," + str(int(ypos + y)) + ";")
+	send_line("PA" + str(int(xpos + radius)) + "," + str(int(ypos + 0)) + ";")
 
 	# move back to xpos, ypos
 	send_line("PU;")
