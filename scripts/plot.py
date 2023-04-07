@@ -31,23 +31,24 @@ def handle_CI(line):
 		return
 	nums = line.split(",")
 	nlen = len(nums)
-	res = 0;
+	angle = 0;
 	if nlen > 2:
 		return
 	elif nlen == 2 :
 		if ";" in nums[1] :
 			nums[1] = nums[1][:-1]
-		res = int(nums[1])
+		angle = int(nums[1])
 
 	if ";" in nums[0] :
 		nums[0] = nums[0][:-1]
 
 	radius = int(nums[0])
-	circum = 2.0 * math.pi * radius
-	arclen = 10 * 40
-	arcs = 60  #int(circum / arclen)
+	if angle == 0 :
+		angle = 6
 	old_pen = pen;
-	print("r %d, res %d  cir %f  arcs %d" % (radius, res, circum, arcs))
+	arcs = 360 / angle
+	incr = angle * 2.0 * math.pi / 360
+	print("r %d, a %d  arcs %d  incr %f" % (radius, angle, arcs, incr))
 	for i in range(arcs) :
 		x = math.sin(i * 2.0 * math.pi / arcs) * radius
  		y = math.cos(i * 2.0 * math.pi / arcs) * radius
