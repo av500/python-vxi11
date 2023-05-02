@@ -48,8 +48,8 @@ def handle_CI(line):
 	old_pen = pen;
 	arcs = 360 / angle
 	incr = angle * 2.0 * math.pi / 360
-	print("r %d, a %d  arcs %d  incr %f" % (radius, angle, arcs, incr))
-	for i in range(arcs) :
+	print("r %d, a %f  arcs %f  incr %f" % (radius, angle, arcs, incr))
+	for i in range(int(arcs)+1) :
  		x = math.cos(i * incr) * radius
 		y = math.sin(i * incr) * radius
 		print("i %d, x %f  y %f" % (i, x, y))
