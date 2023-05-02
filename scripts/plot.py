@@ -110,8 +110,9 @@ def handle_PA(prefix, line):
 
 
 instr = vxi11.Instrument("192.168.1.134", "gpib0,5", term_char = '\r')
-print("plotter:  " + instr.ask("OI;"))
-print("plotter:  " + hex(int(instr.ask("OS;"))))
+#print("plotter:  " + instr.ask("OI;"))
+#print("plotter:  " + hex(int(instr.ask("OS;"))))
+
 print 'plotting:', str(sys.argv[1])
 
 filepath = sys.argv[1]
