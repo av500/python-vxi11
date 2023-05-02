@@ -42,9 +42,11 @@ def handle_CI(line):
 	if ";" in nums[0] :
 		nums[0] = nums[0][:-1]
 
-	radius = int(nums[0])
+	radius = float(nums[0])
 	if angle == 0 :
-		angle = 6
+		angle = 3 / math.sqrt(radius / 4070)
+		if angle > 60 :
+			angle = 60
 	old_pen = pen;
 	arcs = 360 / angle
 	incr = angle * 2.0 * math.pi / 360
